@@ -9,7 +9,6 @@ function generateData() {
   const balanceAfterWithdrow = balance - parseInt(withdrawAmount);
   const user = 'Hermoine Granger';
   const accountNumber = '1001';
-
   const currentDate = new Date();
   const year = currentDate.getFullYear();
   const month = String(currentDate.getMonth() + 1).padStart(2, '0');
@@ -23,7 +22,8 @@ function generateData() {
     user,
     accountNumber,
     balanceAfterWithdrow,
-    formattedDate
+    formattedDate,
+    startBalance
   };
 }
 
