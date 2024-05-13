@@ -37,7 +37,6 @@ describe('Bank app', () => {
     cy.get('.borderM > :nth-child(3) > :nth-child(2)')
       .should('contain', users.balance);
 
-    cy.wait(3000);
     cy.get('[ng-class="btnClass1"]').click();
     cy.get('.fixedTopBox > [style="float:left"]').click(); // i used [Back] button , because test failed without it 
     cy.get('[ng-class="btnClass1"]').click(); 
