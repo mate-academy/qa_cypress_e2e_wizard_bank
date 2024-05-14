@@ -1,10 +1,6 @@
-/* eslint-disable no-unused-vars */
-import { faker } from '@faker-js/faker';
 /// <reference types='cypress' />
 
 describe('Wizard bank app', () => {
-  // const depositAmoun = `${faker.number.int({ min: 500, max: 1000 })}`;
-  // const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
   const user = 'Hermoine Granger';
   const accountNumber = '1001';
   const currency = 'Dollar';
@@ -13,8 +9,6 @@ describe('Wizard bank app', () => {
   const depositAmount = 100;
   const withdrawAmount = 50;
   const balanceDeposit = +balance + depositAmount;
-  // const balance = depositAmoun - withdrawAmount;
-  // const sumBalance = 5096 + 100;
 
   beforeEach(() => {
     cy.visit('/');
@@ -22,16 +16,14 @@ describe('Wizard bank app', () => {
   it('should provide the ability to work with Hermione\'s bank account', () => {
     cy.contains('.btn', 'Customer Login').click();
     cy.url().should('include', 'customer');
-    // eslint-disable-next-line no-undef
     cy.get('#userSelect').select(user);
     cy.get('[type="submit"]').click();
     cy.get('.fontBig').should('contain', user);
 
-    // Assert Account Number
     cy.get('.ng-binding')
       .should('contains.text', accountNumber)
       .should('be.visible');
-    // Assert Balance
+
     cy.get('.ng-binding')
       .should('contains.text', balance)
       .should('be.visible');
@@ -40,18 +32,15 @@ describe('Wizard bank app', () => {
       .should('contains.text', currency)
       .should('be.visible');
 
-    // // 7
     cy.contains('.btn', depositBtn).click();
     cy.get('[placeholder="amount"]').type(depositAmount);
     cy.contains('[type="submit"]', depositBtn).click();
     cy.contains('.error', 'Deposit Successful').should('be.visible');
 
-    // // 11
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .contains('strong', balanceDeposit)
       .should('be.visible');
 
-    // 12
     cy.get('[ng-click="withdrawl()"]').click();
     cy.contains('[type="submit"]', 'Withdraw').should('be.visible');
     cy.get('[placeholder="amount"]').type(withdrawAmount);
