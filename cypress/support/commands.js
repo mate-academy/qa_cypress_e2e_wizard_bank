@@ -23,3 +23,10 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('typeDepositAmount', (amount) => {
+  cy.get('[ng-click="deposit()"]').click();
+  cy.get('[placeholder="amount"]').type(amount);
+  cy.contains('[type="submit"]', 'Deposit').click();
+  cy.get('[ng-show="message"]').should('contain', 'Deposit Successful');
+});
