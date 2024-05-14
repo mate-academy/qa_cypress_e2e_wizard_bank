@@ -12,10 +12,11 @@ describe('Bank app', () => {
   const defaultBalance = 5096;
   const depositeMin = Math.floor(Math.random() * defaultBalance) + 1;
   const date = generateDateRange();
+  const defaultCurency = 'Dollar';
   let balance = defaultBalance;
 
   const depositeMessage = 'Deposit Successful';
-  const desDepositeMessage = 'Transaction successful';
+  const withdrawlMessage = 'Transaction successful';
 
   it('should provide the ability to work with Hermione\'s bank account', () => {
     cy.contains('Customer Login').click();
@@ -26,9 +27,9 @@ describe('Bank app', () => {
     cy.get('[ng-hide="noAccount"]')
       .should('contain', '1001');
     cy.get('[ng-hide="noAccount"]')
-      .should('contain', 'Balance ');
+      .should('contain', defaultBalance);
     cy.get('[ng-hide="noAccount"]')
-      .should('contain', 'Currency');
+      .should('contain', defaultCurency);
     cy.get('[ng-class="btnClass2"]').click();
     cy.get('[ng-model="amount"]').type(depositePlus);
     balance += depositePlus;
@@ -43,7 +44,7 @@ describe('Bank app', () => {
     balance -= depositeMin;
     cy.get('[type="submit"]').click();
     cy.get('[ng-show="message"]')
-      .should('contain', desDepositeMessage);
+      .should('contain', withdrawlMessage);
     cy.get('[ng-hide="noAccount"]')
       .should('contain', defaultBalance);
     cy.reload();
