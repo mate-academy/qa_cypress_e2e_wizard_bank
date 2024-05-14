@@ -52,7 +52,7 @@ describe('Bank app', () => {
 
     cy.get('#accountSelect').should('contain', '1003').select('1003');
     cy.contains('Transactions').click();
-    cy.get('td.ng-binding').should('not.exist').should('not.exist');
+    cy.get('td.ng-binding').should('not.exist');
 
     cy.get('[ng-show="logout"]').click();
     cy.get('#userSelect').should('be.visible');
