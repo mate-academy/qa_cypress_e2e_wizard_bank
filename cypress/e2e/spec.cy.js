@@ -60,7 +60,6 @@ describe('Bank app', () => {
         .contains('strong', '1002')
         .should('be.visible');
     cy.get('.btn').contains('Transactions').click();
-    cy.get('anchor0').should('not.exist');
     cy.get('.btn').contains('Logout').click();
     cy.url().should('include', 'customer');
   });
