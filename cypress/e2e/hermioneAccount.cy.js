@@ -55,15 +55,19 @@ describe('Bank app', () => {
     cy.get('[ng-class="btnClass1"]').click();
     cy.url().should('include', '#/listTx');
     cy.get('#start').type('2024-05-01T08:30');
-    cy.get('td.ng-binding').should('contain', depositValue);
-    cy.get(':nth-child(2)').should('contain', withdrawValue);
+    cy.get('td.ng-binding')
+      .should('contain', depositValue)
+      .should('contain', withdrawValue);
 
     cy.contains('[ng-click="back()"]', 'Back').click();
 
     cy.get('#accountSelect').select('1002');
 
     cy.get('[ng-class="btnClass1"]').click();
-    cy.get('.transaction-item').should('not.exist');
+    cy.get('[ng-click="transactions()"]')
+      .click();
+    cy.get('td.ng-binding')
+      .should('not.exist');
 
     cy.get('.logout').click();
 
