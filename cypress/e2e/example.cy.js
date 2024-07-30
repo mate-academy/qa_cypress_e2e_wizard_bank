@@ -2,11 +2,13 @@ import { faker } from '@faker-js/faker';
 /// <reference types='cypress' />
 
 describe('Bank app', () => {
+  const initialBalance = 5096;
   const depositAmount = `${faker.number.int({ min: 500, max: 1000 })}`;
+  const balanceAfterDeposit = initialBalance + parseInt(depositAmount);
   const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
-  const balance = depositAmount - withdrawAmount;
-  const user = 'Harry Potter';
-  const accountNumber = '1004';
+  const balanceAfterWithdraw = balanceAfterDeposit - withdrawAmount;
+  const user = 'Hermoine Granger';
+  const accountNumber = '1001';
 
   before(() => {
     cy.visit('/');
@@ -21,7 +23,7 @@ describe('Bank app', () => {
       .contains('strong', accountNumber)
       .should('be.visible');
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', '0')
+      .contains('strong', initialBalance)
       .should('be.visible');
     cy.contains('.ng-binding', 'Dollar')
       .should('be.visible');
@@ -33,7 +35,7 @@ describe('Bank app', () => {
     cy.get('[ng-show="message"]')
       .should('contain', 'Deposit Successful');
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', depositAmount)
+      .contains('strong', balanceAfterDeposit)
       .should('be.visible');
 
     cy.get('[ng-click="withdrawl()"]').click();
@@ -45,7 +47,21 @@ describe('Bank app', () => {
     cy.get('[ng-show="message"]')
       .should('contain', 'Transaction successful');
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', balance)
+      .contains('strong', balanceAfterWithdraw)
       .should('be.visible');
+
+    cy.get('[ng-class="btnClass1"]').click();
+    cy.get('tr > :nth-child(1)').should('be.visible');
+    cy.get('a[ng-click*="sortType = \'date\'"]').click();
+    cy.get('[ng-click="back()"]').click();
+
+    cy.get('[name="accountSelect"]').select('1002');
+
+    cy.get('[ng-class="btnClass1"]').click();
+    cy.get('.table').should('not.contain.text', 'Deposit')
+      .and('not.contain.text', 'Withdraw');
+
+    cy.contains('.btn', 'Home').click();
+    cy.get('.btn').contains('Customer Login').should('be.visible');
   });
 });
