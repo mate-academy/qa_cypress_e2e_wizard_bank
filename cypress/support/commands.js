@@ -23,3 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('assertTab', (balance, currency) => {
+  cy.get('.borderM > :nth-child(3)').should('contain', `Balance : ${balance}`)
+    .and('contain', `Currency : ${currency}`);
+}
+);
