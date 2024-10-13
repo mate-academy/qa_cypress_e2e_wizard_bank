@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker';
 /// <reference types='cypress' />
 
+// import { faker } from '@faker-js/faker'; //
+
 describe('Bank app', () => {
   const depositAmount = `${faker.number.int({ min: 500, max: 1000 })}`;
   const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
