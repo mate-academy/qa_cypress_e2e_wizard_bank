@@ -1,55 +1,73 @@
 /// <reference types="cypress" />
-describe('Hermione Granger Account Flow', () => {
-  it('Should log in as Hermione Granger and perform deposit and withdrawal',
+/// <reference types='cypress' />
+
+describe('Bank app', () => {
+  const name = 'Hermoine Granger';
+  const number = '1001';
+  const anotherNumber = '1002';
+  let balance;
+  const currency = 'Dollar';
+
+  const deposit = '1000';
+  const withdrawl = '35';
+
+  const depositSuccess = 'Deposit Successful';
+  const withdrawlSuccess = 'Transaction successful';
+  before(() => {
+    cy.visit('');
+  });
+
+  it('should provide the ability to work with Hermione\'s bank account',
     () => {
-      cy.visit(
-        'https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login'
-      );
-      cy.contains('Customer Login', { timeout: 10000 })
-        .should('be.visible');
+      cy.contains('.btn', 'Customer Login').click();
+      cy.get('#userSelect').select(name);
+      cy.get('[type="submit"]').click();
+      cy.get('#accountSelect').should('contain', number);
 
-      cy.contains('Customer Login').click();
+      cy.contains('.btn', 'Transactions ').click();
+      cy.contains('.btn', 'Reset').click();
+      cy.contains('.btn', 'Back').click();
 
-      cy.get('select').select('Hermoine Granger');
+      cy.get('.borderM > :nth-child(3) > :nth-child(2)')
+        .invoke('text').then((text) => {
+          balance = text;
+          const balanceAfterDeposit = (+balance + +deposit).toString();
+          const balanceAfterWith = (+balanceAfterDeposit - +withdrawl)
+            .toString();
 
-      cy.contains('Login').should('be.visible').click();
+          cy.contains('.ng-binding', currency).should('be.visible');
+          cy.contains('.btn', 'Deposit ').click();
+          cy.get('[placeholder="amount"]').type(deposit);
+          cy.get('[type="submit"]').click();
+          cy.get('.error').should('contain', depositSuccess);
+          cy.get('.borderM > :nth-child(3) > :nth-child(2)')
+            .should('contain', balanceAfterDeposit);
 
-      cy.contains('Account Number').parent().should('contain', '1001');
+          cy.contains('.btn', 'Transactions ').click();
+          cy.contains('.btn', 'Back').click();
 
-      cy.get('strong.ng-binding').should('contain', '5096');
+          cy.contains('.btn', 'Withdrawl ').click();
+          cy.get('[placeholder="amount"]').type(withdrawl);
+          cy.get('[type="submit"]').click();
+          cy.get('.error').should('contain', withdrawlSuccess);
+          cy.get('.borderM > :nth-child(3) > :nth-child(2)')
+            .should('contain', balanceAfterWith);
 
-      cy.get('strong.ng-binding').contains('Dollar').should('be.visible');
+          cy.reload();
 
-      cy.contains('Deposit').click();
-      cy.get('input[placeholder="amount"]').type('100');
-      cy.contains('Deposit').click();
+          cy.contains('.btn', 'Transactions ').click();
 
-      cy.get('span.error.ng-binding[ng-show="message"]', { timeout: 10000 })
-        .should('not.have.class', 'ng-hide')
-        .and('contain', 'Deposit Successful');
+          cy.contains('tr', 'Credit').should('contain', deposit);
+          cy.contains('tr', 'Debit').should('contain', withdrawl);
+          cy.contains('.btn', 'Back').click();
 
-      cy.get('div.center').should('contain', '5196');
+          cy.get('#accountSelect').select(anotherNumber);
+          cy.contains('.btn', 'Transactions ').click();
+          cy.contains('tr', 'Credit').should('not.exist');
+          cy.contains('tr', 'Debit').should('not.exist');
 
-      cy.contains('Withdraw').click();
-      cy.get('input[placeholder="amount"]').type('100');
-      cy.contains('Withdraw').click();
-
-      cy.get('span.error.ng-binding[ng-show="message"]', { timeout: 10000 })
-        .should('not.have.class', 'ng-hide')
-        .and('be.visible')
-        .and('contain', 'Transaction successful');
-
-      cy.get('strong.ng-binding').eq(1).should('contain', '5096');
-
-      cy.contains('Transactions').click();
-
-      cy.contains('Back').should('be.visible').click();
-
-      cy.get('select').select('1002');
-
-      cy.contains('Transactions').click();
-      cy.get('tbody tr').should('have.length', 0);
-
-      cy.contains('Logout').should('be.visible').click();
+          cy.get('.logout').click();
+          cy.get('#userSelect').should('exist');
+        });
     });
 });
