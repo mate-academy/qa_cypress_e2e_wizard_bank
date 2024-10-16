@@ -1,51 +1,69 @@
-import { faker } from '@faker-js/faker';
+
 /// <reference types='cypress' />
 
 describe('Bank app', () => {
-  const depositAmount = `${faker.number.int({ min: 500, max: 1000 })}`;
-  const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
-  const balance = depositAmount - withdrawAmount;
-  const user = 'Harry Potter';
-  const accountNumber = '1004';
+  let balance;
+  const fullName = 'Hermoine Granger';
+  const accountNumber = '1001';
+  const currency = 'Dollar';
 
-  before(() => {
-    cy.visit('/');
-  });
+  const depositAmount = '200';
+  const withdrawAmount = '100';
 
-  it('should provide the ability to work with bank account', () => {
+  const depositSuccessMessage = 'Deposit Successful';
+  const withdrawlSuccessMessage = 'Transaction successful';
+
+  beforeEach(() => cy
+    .visit('baseUrl'));
+  it('should allow wizzard to login and view transactions', () => {
     cy.contains('.btn', 'Customer Login').click();
-    cy.get('[name="userSelect"]').select(user);
-    cy.contains('.btn', 'Login').click();
+    cy.get('#userSelect').select(fullName);
+    cy.get('button[type="submit"]').click();
+    cy.get('#accountSelect').should('contain', accountNumber);
+    cy.get('.borderM > :nth-child(3) > :nth-child(2)')
+      .invoke('text').then((text) => {
+        cy.log(`${text}`);
 
-    cy.contains('[ng-hide="noAccount"]', 'Account Number')
-      .contains('strong', accountNumber)
-      .should('be.visible');
-    cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', '0')
-      .should('be.visible');
-    cy.contains('.ng-binding', 'Dollar')
-      .should('be.visible');
+        balance = text;
+        const balanceAfterDeposit = (+balance + +depositAmount)
+          .toString();
+        const balanceAfterWithdrawl = (+balanceAfterDeposit - +withdrawAmount)
+          .toString();
 
-    cy.get('[ng-click="deposit()"]').click();
-    cy.get('[placeholder="amount"]').type(depositAmount);
-    cy.contains('[type="submit"]', 'Deposit').click();
+        cy.get('.borderM > :nth-child(3) > :nth-child(3)')
+          .should('contain', currency);
+        cy.contains('.btn', 'Deposit ').click();
+        cy.get('[placeholder="amount"]').type(`${depositAmount}{enter}`);
+        cy.contains('.ng-binding', depositSuccessMessage)
+          .should('exist').and('be.visible');
+        cy.get('.borderM > :nth-child(3)')
+          .should('contain', balanceAfterDeposit);
 
-    cy.get('[ng-show="message"]')
-      .should('contain', 'Deposit Successful');
-    cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', depositAmount)
-      .should('be.visible');
+        cy.contains('.btn', 'Transactions ').click();
+        cy.contains('.btn', 'Back')
+          .click();
 
-    cy.get('[ng-click="withdrawl()"]').click();
-    cy.contains('[type="submit"]', 'Withdraw')
-      .should('be.visible');
-    cy.get('[placeholder="amount"]').type(withdrawAmount);
-    cy.contains('[type="submit"]', 'Withdraw').click();
+        cy.contains('.btn', 'Withdrawl').click();
+        cy.get('[placeholder="amount"]')
+          .type(withdrawAmount);
+        cy.get('[placeholder="amount"]')
+          .should('have.value', withdrawAmount).type('{enter}');
+        cy.contains('.ng-binding', withdrawlSuccessMessage)
+          .should('exist').and('be.visible');
+        cy.get('.borderM > :nth-child(3)')
+          .should('contain', balanceAfterWithdrawl);
 
-    cy.get('[ng-show="message"]')
-      .should('contain', 'Transaction successful');
-    cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', balance)
-      .should('be.visible');
+        cy.reload();
+
+        cy.contains('.btn', 'Transactions ').click();
+
+        cy.contains('tr', 'Credit').should('contain', depositAmount);
+        cy.contains('tr', 'Debit').should('contain', withdrawAmount);
+
+        cy.contains('.btn', 'Back').click();
+
+        cy.get('.logout').click();
+        cy.get('#userSelect').should('be.visible');
+      });
   });
 });
