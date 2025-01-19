@@ -14,7 +14,7 @@ describe('Bank app', () => {
   });
 
   it(`should provide the ability to work with Hermione/'s bank account`, () => {
-    // Login as Hermione Granger
+    // Login as Hermione
     cy.contains('.btn', 'Customer Login').click();
     cy.get('[name="userSelect"]').select(user);
     cy.contains('.btn', 'Login').click();
