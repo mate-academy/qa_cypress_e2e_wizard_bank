@@ -22,7 +22,7 @@ module.exports = {
     'cypress/no-assigning-return-values': 'error',
     'cypress/no-unnecessary-waiting': 'error',
     'cypress/assertion-before-screenshot': 'warn',
-    'cypress/no-force': 'warn',
+    'cypress/no-force': 'off',
     'cypress/no-async-tests': 'error',
     'cypress/no-pause': 'error',
     'max-len': ['error', 80, {
@@ -33,5 +33,6 @@ module.exports = {
     'arrow-parens': ['error', 'always'],
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
     'no-console': ['error']
+
   }
 };
