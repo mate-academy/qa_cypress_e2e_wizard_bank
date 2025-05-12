@@ -12,7 +12,7 @@ describe("Bank app", () => {
 
     cy.contains('[ng-hide="noAccount"]', 'Account Number')
       .should('contain', '1001');
-      
+
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .should('contain', '5096');
 
@@ -32,18 +32,31 @@ describe("Bank app", () => {
     cy.get('form[ng-submit="withdrawl()"] input[ng-model="amount"]').type('100');
     cy.get('form.ng-dirty > .btn').click();
     cy.contains('span', 'Transaction successful')
+      .should('be.visible');
 
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .should('contain', '5996');
+
     cy.get('button[ng-click="transactions()"]').click();
+
+    cy.get('.marTop.tbStruct.border.box.ng-scope tbody tr')
+      .should('contain', '1000')
+      .and('contain', 'Credit');
+
+    cy.get('.marTop.tbStruct.border.box.ng-scope tbody tr')
+      .should('contain', '100')
+      .and('contain', 'Debit');
+
+    cy.get('.fixedTopBox > [style="float:left"]').click();
+
+    cy.get('#accountSelect').select('1002');
+
+    cy.get('button[ng-click="transactions()"]').click();
+
     cy.get('table tbody tr').should('have.length', 0);
 
     cy.get('.logout').click();
     cy.url().should('include', '/customer');
-
-
-
-
   });
-  
 });
+
