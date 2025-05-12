@@ -4,6 +4,8 @@ module.exports = defineConfig({
   e2e: {
     baseUrl: 'https://www.globalsqa.com/angularJs-protractor/BankingProject/',
     setupNodeEvents(on, config) {
-    }
+    },
+    viewportHeight: 700,
+    viewportWidth: 1000
   }
 });
