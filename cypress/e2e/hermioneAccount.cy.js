@@ -17,7 +17,7 @@ describe('Hermione Account Flow', () => {
   });
 
   it('should check account details', () => {
-    cy.url({ timeout: 10000 }).should('include', '/account');
+    cy.url({ timeout: 10000 }).should('include', '/customer');
 
     // eslint-disable-next-line max-len
     cy.get('strong.ng-binding', { timeout: 10000 }).eq(0).should('contain', '1001');
