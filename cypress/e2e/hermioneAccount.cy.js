@@ -9,7 +9,7 @@ describe('Bank app', () => {
   const accountNumber = '1001';
   let balance = 5096;
   const date = new Date();
-  const formatDate = date.toISOString().slice(0, 19);
+  const formatDate = date.toISOString().slice(0, 14);
   before(() => {
     cy.visit('/');
   });
@@ -54,13 +54,10 @@ describe('Bank app', () => {
       .contains('strong', balance)
       .should('be.visible');
 
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(500);
-
     cy.get('[ng-click="transactions()"]').click();
 
     cy.get('#start').click();
-    cy.get('#start').type(formatDate);
+    cy.get('#start').type(`${formatDate}00:00`);
 
     cy.get('#anchor0 > :nth-child(2)').should('contain', `${depositAmount}`);
     cy.get('#anchor1 > :nth-child(2)').should('contain', `${withdrawAmount}`);
