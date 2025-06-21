@@ -46,5 +46,5 @@ You can find an example in the `example.spec.js` file.
 
 ## Advanced level
 
-Try to implement more testing flow in a separate file.  
+Try to implement more testing flow in a separate file.
 Try to use `faker` to generate test data.
