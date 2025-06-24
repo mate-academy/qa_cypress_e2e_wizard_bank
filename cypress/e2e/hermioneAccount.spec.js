@@ -1,90 +1,63 @@
 /// <reference types='cypress' />
 const { faker } = require('@faker-js/faker');
 
-describe('Bank app', () => {
-  const EC = protractor.ExpectedConditions;
-  const customerName = 'Hermoine Granger';
+describe('Hermione Account Flow.', () => {
+  const depositAmount = Math.floor(Math.random() * 500 + 100);
+  const withdrawAmount = Math.floor(depositAmount / 2);
 
-  let initialBalance;
-  const depositAmount = faker.datatype.number({ min: 100, max: 1000 });
-  const withdrawAmount = faker.datatype.number({ min: 10, max: depositAmount });
-
-  beforeAll(async () => {
-    await browser.get('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login');
-    await element(by.buttonText('Customer Login')).click();
-    await element(by.model('custId')).element(by.cssContainingText('option', customerName)).click();
-    await element(by.buttonText('Login')).click();
+  before(() => {
+    cy.visit('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login');
   });
 
-  it('should validate initial account details', async () => {
-    const accountNo = await element(by.binding('accountNo')).getText();
-    expect(accountNo).toMatch(/^\d+$/);
+  it('Logs in as Hermione Granger and performs deposit and withdrawal.', () => {
+    cy.contains('Customer Login').click();
+    cy.get('#userSelect').select('Hermoine Granger');
+    cy.get('button[type="submit"]').click();
 
-    const currency = await element(by.binding('currency')).getText();
-    expect(currency).toBe('Dollar');
+    cy.get('.borderM strong').eq(0).invoke('text').should('match', /^\d{4}$/);
+    cy.get('.borderM strong').eq(1).invoke('text').as('initialBalance');
+    cy.get('.borderM strong').eq(2).should('contain.text', 'Dollar');
 
-    initialBalance = parseInt(await element(by.binding('balance')).getText());
-    expect(initialBalance).toBeGreaterThanOrEqual(0);
-  });
+    cy.contains('Deposit').click();
+    cy.get('input[ng-model="amount"]').type(depositAmount);
+    cy.get('form[name="myForm"] button').click();
+    cy.get('.error').should('contain.text', 'Deposit Successful');
 
-  it('should perform deposit and validate success', async () => {
-    await element(by.buttonText('Deposit')).click();
-    await element(by.model('amount')).sendKeys(depositAmount);
-    await element(by.css('form[name="myForm"] button')).click();
-
-    const successMsg = await element(by.css('.error')).getText();
-    expect(successMsg).toContain('Deposit Successful');
-
-    const balanceAfterDeposit = parseInt(await element(by.binding('balance')).getText());
-    expect(balanceAfterDeposit).toBe(initialBalance + depositAmount);
-    initialBalance = balanceAfterDeposit;
-  });
-
-  it('should withdraw funds and validate success', async () => {
-    await element(by.buttonText('Withdrawl')).click();
-    await element(by.model('amount')).sendKeys(withdrawAmount);
-    await element(by.css('form[name="myForm"] button')).click();
-
-    const successMsg = await element(by.css('.error')).getText();
-    expect(successMsg).toContain('Transaction successful');
-
-    const balanceAfterWithdraw = parseInt(await element(by.binding('balance')).getText());
-    expect(balanceAfterWithdraw).toBe(initialBalance - withdrawAmount);
-    initialBalance = balanceAfterWithdraw;
-  });
-
-  it('should verify transactions log', async () => {
-    await element(by.buttonText('Transactions')).click();
-    const transactions = await element.all(by.repeater('tx in transactions'));
-
-    const depositTx = transactions.filter(async (tx) => {
-      const txText = await tx.getText();
-      return txText.includes(depositAmount.toString());
-    });
-    const withdrawTx = transactions.filter(async (tx) => {
-      const txText = await tx.getText();
-      return txText.includes(withdrawAmount.toString());
+    cy.get('.borderM strong').eq(1).invoke('text').then((balanceAfterDeposit) => {
+      cy.get('@initialBalance').then((initial) => {
+        const expected = parseInt(initial) + depositAmount;
+        expect(parseInt(balanceAfterDeposit)).to.eq(expected);
+      });
     });
 
-    expect(await depositTx.count()).toBeGreaterThan(0);
-    expect(await withdrawTx.count()).toBeGreaterThan(0);
+    cy.contains('Withdrawl').click();
+    cy.get('input[ng-model="amount"]').type(withdrawAmount);
+    cy.get('form[name="myForm"] button').click();
+    cy.get('.error').should('contain.text', 'Transaction successful');
 
-    await element(by.buttonText('Back')).click();
-  });
+    cy.get('.borderM strong').eq(1).invoke('text').then((balanceAfterWithdraw) => {
+      cy.get('@initialBalance').then((initial) => {
+        const expected = parseInt(initial) + depositAmount - withdrawAmount;
+        expect(parseInt(balanceAfterWithdraw)).to.eq(expected);
+      });
+    });
 
-  it('should check empty transactions on a different account', async () => {
-    const options = element.all(by.css('#accountSelect option'));
-    await options.get(1).click(); // assume second account has no activity
-    await element(by.buttonText('Transactions')).click();
+    cy.contains('Transactions').click();
+    cy.get('table tbody tr').should('have.length.at.least', 2);
+    cy.contains('Back').click();
 
-    const emptyMessage = element(by.cssContainingText('strong', 'No Transactions Found'));
-    expect(await emptyMessage.isPresent()).toBe(true);
+    cy.get('#accountSelect option').then(($options) => {
+      const accounts = [...$options];
+      const second = accounts.find((opt) => !opt.selected);
+      if (second) {
+        cy.get('#accountSelect').select(second.label);
+        cy.contains('Transactions').click();
+        cy.contains('No Transactions Found').should('exist');
+        cy.contains('Back').click();
+      }
+    });
 
-    await element(by.buttonText('Back')).click();
-  });
-
-  it('should logout successfully', async () => {
-    await element(by.buttonText('Logout')).click();
-    expect(await element(by.buttonText('Your Name')).isPresent()).toBe(true);
+    cy.contains('Logout').click();
+    cy.get('#userSelect').should('be.visible');
   });
 });
