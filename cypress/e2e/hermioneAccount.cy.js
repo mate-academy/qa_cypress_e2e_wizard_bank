@@ -5,7 +5,7 @@ const { toLocalISOString } = require('../support/toLocalISOString');
 
 describe('Bank app', () => {
   before(() => {
-    cy.visit('/login');
+    cy.visit('/');
   });
 
   it(`should provide the ability to work with Hermione's bank account`, () => {
