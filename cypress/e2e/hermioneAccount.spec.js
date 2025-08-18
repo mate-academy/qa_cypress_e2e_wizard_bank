@@ -1,4 +1,4 @@
-// cypress/e2e/hermioneAccount.cy.js
+/// <reference types="cypress" />
 
 describe('GlobalsQa Bank Flow - Hermione Granger', () => {
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
     // Login as Hermione Granger
     cy.contains('Customer Login').click();
     cy.get('#userSelect').select('Hermione Granger');
-    cy.get('button[type=\'submit\']').click();
+    cy.get('button[type="submit"]').click();
 
     // Assert account details
     cy.get('.center strong:nth-child(1)').should('contain.text', '1001');
@@ -24,15 +24,15 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
 
     // Deposit money
     cy.contains('Deposit').click();
-    cy.get('input[ng-model=\'amount\']').type('100');
-    cy.get('form button[type=\'submit\']').click();
+    cy.get('input[ng-model="amount"]').type('100');
+    cy.get('form button[type="submit"]').click();
     cy.get('.error').should('contain.text', 'Deposit Successful');
     cy.get('.center strong:nth-child(2)').should('contain.text', '100');
 
     // Withdraw money
     cy.contains('Withdrawl').click();
-    cy.get('input[ng-model=\'amount\']').type('50');
-    cy.get('form button[type=\'submit\']').click();
+    cy.get('input[ng-model="amount"]').type('50');
+    cy.get('form button[type="submit"]').click();
     cy.get('.error').should('contain.text', 'Transaction successful');
     cy.get('.center strong:nth-child(2)').should('contain.text', '50');
 
@@ -40,7 +40,7 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
     cy.contains('Transactions').click();
     cy.get('table tbody tr').should('have.length', 2);
 
-    // Assert deposit row
+    // Assert deposit row (amount + type)
     cy.get('table tbody tr')
       .eq(0)
       .within(() => {
@@ -48,7 +48,7 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
         cy.get('td').eq(2).should('contain.text', 'Credit');
       });
 
-    // Assert withdraw row
+    // Assert withdraw row (amount + type)
     cy.get('table tbody tr')
       .eq(1)
       .within(() => {
@@ -64,6 +64,6 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
 
     // Logout
     cy.contains('Logout').click();
-    cy.get('button[ng-click=\'customer()\']').should('be.visible');
+    cy.get('button[ng-click="customer()"]').should('be.visible');
   });
 });
