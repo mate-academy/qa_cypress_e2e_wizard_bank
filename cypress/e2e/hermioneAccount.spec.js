@@ -1,4 +1,4 @@
-// hermione.spec.js
+// cypress/e2e/hermioneAccount.cy.js
 
 describe('GlobalsQa Bank Flow - Hermione Granger', () => {
   beforeEach(() => {
@@ -14,13 +14,13 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
     cy.get('button[type=\'submit\']').click();
 
     // Assert account details
-    cy.get('.center strong:nth-child(1)').should('contain.text', '1001'); // Account Number
+    cy.get('.center strong:nth-child(1)').should('contain.text', '1001');
     cy.get('.center strong:nth-child(2)')
       .invoke('text')
       .then((balanceText) => {
-        expect(Number(balanceText)).to.be.a('number'); // Balance numeric
+        expect(Number(balanceText)).to.be.a('number');
       });
-    cy.get('.center strong:nth-child(3)').should('contain.text', 'Dollar'); // Currency
+    cy.get('.center strong:nth-child(3)').should('contain.text', 'Dollar');
 
     // Deposit money
     cy.contains('Deposit').click();
@@ -39,8 +39,22 @@ describe('GlobalsQa Bank Flow - Hermione Granger', () => {
     // Check Transactions (deposit + withdraw)
     cy.contains('Transactions').click();
     cy.get('table tbody tr').should('have.length', 2);
-    cy.get('table tbody tr').first().should('contain.text', 'Credit');
-    cy.get('table tbody tr').last().should('contain.text', 'Debit');
+
+    // Assert deposit row
+    cy.get('table tbody tr')
+      .eq(0)
+      .within(() => {
+        cy.get('td').eq(1).should('contain.text', '100');
+        cy.get('td').eq(2).should('contain.text', 'Credit');
+      });
+
+    // Assert withdraw row
+    cy.get('table tbody tr')
+      .eq(1)
+      .within(() => {
+        cy.get('td').eq(1).should('contain.text', '50');
+        cy.get('td').eq(2).should('contain.text', 'Debit');
+      });
 
     // Switch account
     cy.contains('Back').click();
