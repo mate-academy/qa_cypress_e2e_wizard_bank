@@ -5,7 +5,8 @@ describe('Bank app', function () {
   const withdraw = 200;
 
   before(function () {
-    cy.visit('/');
+    cy.visit(
+      'https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login');
   });
 
   it('should provide the ability to work with Hermiones bank account', () => {
