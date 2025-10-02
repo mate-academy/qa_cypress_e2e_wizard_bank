@@ -6,7 +6,6 @@
   "dependencies": {
     "cypress-image-snapshot": "^4.0.1",
     "eslint-plugin-cypress": "^2.12.1",
-    "@faker-js/faker": "^8.4.1",
     "pg": "^8.9.0",
     "sequelize": "^6.21.2",
     "sequelize-cli": "^6.4.1"
@@ -16,7 +15,7 @@
     "@types/cypress": "latest",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
-    "cypress": "^12.13.0",
+    "cypress": "^12.17.4",
     "eslint": "^8.34.0",
     "eslint-config-standard-with-typescript": "^34.0.0",
     "eslint-plugin-import": "^2.27.5",
@@ -34,5 +33,20 @@
   },
   "lint-staged": {
     "*.js": "eslint --max-warnings=0"
-  }
+  },
+  "name": "qa_cypress_e2e_wizard_bank",
+  "version": "1.0.0",
+  "description": "1. Fork the repo. 1. Clone **your** forked repository. 1. Run the command `npm i`. 1. Create a new branch `git checkout -b testing`. 1. Resolve tasks in the `cypress`/`e2e`/`hermioneAccount.cy.js`. 1. Check yourself before submitting the task with a [Cypress checklist](https://mate-academy.github.io/qa-program/checklists/cypress.html). 1. Create a pull request. 1. Do not forget to click on `Re-request review` if you submit the homework after previous review.",
+  "main": ".eslintrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oliwialesniak-mate/qa_cypress_e2e_wizard_bank.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oliwialesniak-mate/qa_cypress_e2e_wizard_bank/issues"
+  },
+  "homepage": "https://github.com/oliwialesniak-mate/qa_cypress_e2e_wizard_bank#readme"
 }
