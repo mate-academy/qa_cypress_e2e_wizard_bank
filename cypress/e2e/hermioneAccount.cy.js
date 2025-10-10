@@ -12,7 +12,9 @@ describe('Bank app - Hermione Granger account', () => {
   const accountNumber = '1001';
 
   before(() => {
-    cy.visit('/');
+    cy.visit(
+      'https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login'
+    );
   });
 
   it('should provide the ability to work with Hermione\'s bank account', () => {
@@ -41,7 +43,10 @@ describe('Bank app - Hermione Granger account', () => {
     cy.get('[placeholder="amount"]').type(withdrawAmount);
     cy.contains('[type="submit"]', 'Withdraw').click();
 
-    cy.get('[ng-show="message"]').should('contain.text', 'Transaction successful');
+    cy.get('[ng-show="message"]').should(
+      'contain.text',
+      'Transaction successful'
+    );
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .contains('strong', finalBalance.toString())
       .should('be.visible');
@@ -59,8 +64,7 @@ describe('Bank app - Hermione Granger account', () => {
     cy.get('[name="accountSelect"]').select('1002');
 
     cy.contains('.btn', 'Transactions').click();
-    cy.get('table').should('not.contain.text', depositAmount);
-    cy.get('table').should('not.contain.text', withdrawAmount);
+    cy.get('table tbody tr').should('have.length', 0);
 
     cy.contains('.btn', 'Logout').click();
     cy.contains('.btn', 'Customer Login').should('be.visible');
