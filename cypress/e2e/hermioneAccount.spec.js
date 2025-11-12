@@ -21,7 +21,7 @@ describe('Волшебный банк — проверка потока клие
 
     cy.get('.center strong:nth-child(1)').should('contain', 'Account Number');
     cy.get('.center strong:nth-child(2)').should('contain', 'Balance : 0');
-    cy.get('.center strong:nth-child(3)').should('contain', 'Currency : Dollar');
+    cy.get('.center strong:nth-child(3)').should('contain', 'Currency : Pound');
 
     // Сохраняем начальный баланс
     cy.get('.center strong:nth-child(2)').invoke('text').then((balanceText) => {
