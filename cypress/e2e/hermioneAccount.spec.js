@@ -16,12 +16,12 @@ describe('Волшебный банк — проверка потока клие
     // Подтверждаем номер счёта и валюту
     cy.get('.form-control').should('exist').then(($select) => {
       const accountNumber = $select.val();
-      expect(accountNumber).to.be.oneOf(['1001', '1002', '1003']); // например
+      expect(accountNumber).to.equal('1001'); // Гермиона Грейнджер имеет счёт №1001
     });
 
     cy.get('.center strong:nth-child(1)').should('contain', 'Account Number');
-    cy.get('.center strong:nth-child(2)').should('contain', 'Balance :');
-    cy.get('.center strong:nth-child(3)').should('contain', 'Currency :');
+    cy.get('.center strong:nth-child(2)').should('contain', 'Balance : 0');
+    cy.get('.center strong:nth-child(3)').should('contain', 'Currency : Dollar');
 
     // Сохраняем начальный баланс
     cy.get('.center strong:nth-child(2)').invoke('text').then((balanceText) => {
@@ -54,8 +54,8 @@ describe('Волшебный банк — проверка потока клие
       // === ТРАНЗАКЦИИ ===
       cy.contains('Transactions').click();
       cy.get('table tbody tr').should('have.length', 2);
-      cy.get('table tbody tr').first().should('contain', 'Credit').and('contain', '100');
-      cy.get('table tbody tr').last().should('contain', 'Debit').and('contain', '50');
+      cy.get('table tbody tr').first().should('contain', 'Debit').and('contain', '50');
+      cy.get('table tbody tr').last().should('contain', 'Credit').and('contain', '100');
 
       cy.contains('Back').click();
 
