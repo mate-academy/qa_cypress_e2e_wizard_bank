@@ -23,3 +23,15 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('saveBalanceAccount', (amount) => {
+  cy.get('.borderM > :nth-child(3) > :nth-child(2)')
+    .invoke('text') // 2. Pobierz cały tekst z tego elementu
+    .then((text) => {
+      // 3. Użyj JavaScript do wyodrębnienia samej kwoty
+      const balanceText = text.replace('Balance: ', '').trim(); // Usuń "Balance: " i białe znaki
+      amount = balanceText;
+      cy.log(amount);
+      cy.log(balanceText);
+    });
+});
