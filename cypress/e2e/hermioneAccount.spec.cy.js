@@ -75,13 +75,13 @@ describe('Bank app', () => {
           });
 
         cy.get('.fixedTopBox > [style="float:left"]').click();
-      });
 
-    cy.get('#accountSelect').select('1002');
-    cy.get('[ng-class="btnClass1"]').click();
-    cy.get('table tbody tr').should('have.length', 0);
-    cy.get('.fixedTopBox > [style="float:left"]').click();
-    cy.get('.logout').click();
-    cy.get('[name="userSelect"]').should('be.visible');
+        cy.get('#accountSelect').select('1002');
+        cy.get('[ng-class="btnClass1"]').click();
+        cy.get('table tbody tr').should('have.length', 0);
+        cy.get('.fixedTopBox > [style="float:left"]').click();
+        cy.get('.logout').click();
+        cy.get('[name="userSelect"]').should('be.visible');
+      });
   });
 });
