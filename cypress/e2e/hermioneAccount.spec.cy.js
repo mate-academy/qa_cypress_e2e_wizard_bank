@@ -7,17 +7,19 @@ describe('Bank app', () => {
   const accountNumber = '1001';
   const depositAmount = `${faker.number.int({ min: 500, max: 1000 })}`;
   const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
-  let initialBalance;
+  let initialBalance = 5096;
 
   before(() => {
     cy.visit('/');
   });
 
   it('should provide the ability to work with Hermione\'s bank account', () => {
-    cy.login(user);
+    cy.contains('.btn', 'Customer Login').click();
+    cy.get('[name="userSelect"]').select(user);
+    cy.contains('.btn', 'Login').click();
 
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .contains('strong', '5096')
+      .contains('strong', initialBalance)
       .invoke('text')
       .then((text) => {
         initialBalance = +text.trim();
