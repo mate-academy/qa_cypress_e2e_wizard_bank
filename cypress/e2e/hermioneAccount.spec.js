@@ -13,6 +13,8 @@ describe('Bank app', () => {
     cy.get('#userSelect').select('Hermoine Granger');
     cy.get('.btn.btn-default').click();
     cy.get('#accountSelect').select('1001');
+    cy.get('[ng-hide=noAccount] .ng-binding:nth-child(1)')
+      .should('have.text', '1001');
 
     cy.get('[ng-hide=noAccount] .ng-binding:nth-child(3)')
       .invoke('text')
