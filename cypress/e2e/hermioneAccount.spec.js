@@ -1,11 +1,129 @@
-/// <reference types='cypress' />
+describe('Wizard Bank - Hermione Granger Account', () => {
+  const customerName = 'Hermione Granger';
+  const depositAmount = 500;
+  const withdrawAmount = 200;
 
-describe('Bank app', () => {
-  before(() => {
-    cy.visit('/');
+  let initialBalance;
+  let initialTransactionsCount;
+
+  beforeEach(() => {
+    cy.visit('https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login');
   });
 
-  it('should provide the ability to work with Hermione\'s bank account', () => {
+  it('should complete deposit, withdrawal and transaction verification flow', () => {
+    // Customer Login
+    cy.contains('button', 'Customer Login')
+      .click();
 
+    cy.get('#userSelect')
+      .select(customerName);
+
+    cy.contains('button', 'Login')
+      .click();
+
+    // Assert Account Number and Currency
+    cy.get('.borderM strong')
+      .eq(0)
+      .should('contain', '1001'); // Account Number
+
+    cy.get('.borderM strong')
+      .eq(2)
+      .should('contain', 'Dollar'); // Currency
+
+    // Read initial balance dynamically
+    cy.get('.borderM strong')
+      .eq(1)
+      .invoke('text')
+      .then((text) => {
+        initialBalance = Number(text);
+      });
+
+    // Read initial transactions count
+    cy.contains('button', 'Transactions')
+      .click();
+
+    cy.get('table tbody tr')
+      .then((rows) => {
+        initialTransactionsCount = rows.length;
+      });
+
+    cy.contains('button', 'Back')
+      .click();
+
+    // Deposit
+    cy.contains('button', 'Deposit')
+      .click();
+
+    cy.get('input[ng-model="amount"]')
+      .type(depositAmount);
+
+    cy.contains('button', 'Deposit')
+      .click();
+
+    cy.get('.error')
+      .should('contain', 'Deposit Successful');
+
+    cy.get('.borderM strong')
+      .eq(1)
+      .should('contain', initialBalance + depositAmount);
+
+    // Withdraw
+    cy.contains('button', 'Withdrawl')
+      .click();
+
+    cy.get('input[ng-model="amount"]')
+      .clear()
+      .type(withdrawAmount);
+
+    cy.contains('button', 'Withdraw')
+      .click();
+
+    cy.get('.error')
+      .should('contain', 'Transaction successful');
+
+    cy.get('.borderM strong')
+      .eq(1)
+      .should('contain', initialBalance + depositAmount - withdrawAmount);
+
+    // Transactions
+    cy.contains('button', 'Transactions')
+      .click();
+
+    cy.get('table tbody tr')
+      .should('have.length', initialTransactionsCount + 2);
+
+    // Assert Deposit transaction (second-to-last)
+    cy.get('table tbody tr')
+      .eq(initialTransactionsCount)
+      .should('contain', depositAmount)
+      .and('contain', 'Credit');
+
+    // Assert Withdraw transaction (last)
+    cy.get('table tbody tr')
+      .last()
+      .should('contain', withdrawAmount)
+      .and('contain', 'Debit');
+
+    // Back
+    cy.contains('button', 'Back')
+      .click();
+
+    // Change account
+    cy.get('#accountSelect')
+      .select(1);
+
+    // Transactions for another account
+    cy.contains('button', 'Transactions')
+      .click();
+
+    cy.get('table tbody tr')
+      .should('have.length', 0);
+
+    // Logout
+    cy.contains('button', 'Logout')
+      .click();
+
+    cy.contains('button', 'Customer Login')
+      .should('be.visible');
   });
 });
