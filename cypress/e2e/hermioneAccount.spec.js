@@ -21,6 +21,15 @@ describe('Wizard Bank - Hermione Granger Account', () => {
     cy.contains('button', 'Login')
       .click();
 
+    // Assert Account Number and Currency
+    cy.get('.borderM strong')
+      .eq(0)
+      .should('contain', '1001'); // Account Number
+
+    cy.get('.borderM strong')
+      .eq(2)
+      .should('contain', 'Dollar'); // Currency
+
     // Read initial balance dynamically
     cy.get('.borderM strong')
       .eq(1)
@@ -29,7 +38,7 @@ describe('Wizard Bank - Hermione Granger Account', () => {
         initialBalance = Number(text);
       });
 
-    // Go to transactions and read initial count
+    // Read initial transactions count
     cy.contains('button', 'Transactions')
       .click();
 
@@ -83,6 +92,13 @@ describe('Wizard Bank - Hermione Granger Account', () => {
     cy.get('table tbody tr')
       .should('have.length', initialTransactionsCount + 2);
 
+    // Assert Deposit transaction (second-to-last)
+    cy.get('table tbody tr')
+      .eq(initialTransactionsCount)
+      .should('contain', depositAmount)
+      .and('contain', 'Credit');
+
+    // Assert Withdraw transaction (last)
     cy.get('table tbody tr')
       .last()
       .should('contain', withdrawAmount)
