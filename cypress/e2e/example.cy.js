@@ -48,4 +48,5 @@ describe('Bank app', () => {
       .contains('strong', balance)
       .should('be.visible');
   });
+  //comment
 });
