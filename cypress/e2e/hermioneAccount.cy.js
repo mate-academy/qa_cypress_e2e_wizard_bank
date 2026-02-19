@@ -29,11 +29,30 @@ describe('Bank app', () => {
       });
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .parent()
-      .find('strong')
       .invoke('text')
-      .then((t) => {
-        const initial = Number(t) || 0;
-        expect(initial).to.be.a('number');
+      .then((text) => {
+        const raw = text.trim();
+        const numberMatch = raw.match(/[\d,]+/);
+        const initial = numberMatch ? Number(numberMatch[0].replace(/,/g, '')) : 0;
+        /* eslint-disable no-unused-expressions */
+        expect(Number.isFinite(initial)).to.be.true;
+        /* eslint-enable no-unused-expressions */
+
+        const currencyCandidates = [
+          'Dollar', 'Pound', 'Rupee',
+          'USD', 'GBP', 'INR',
+          'Euro', 'EUR', 'Pound Sterling'
+        ];
+
+        const norm = raw.toLowerCase();
+        const found = currencyCandidates
+          .find((c) => norm.includes(c.toLowerCase()));
+
+        /* eslint-disable no-unused-expressions */
+        expect(found, `Expected balance text "${raw}" to contain a known currency`).to.be.ok;
+        /* eslint-enable no-unused-expressions */
+
+        cy.wrap(found).as('accountCurrency');
       });
 
     cy.get('#accountSelect')
