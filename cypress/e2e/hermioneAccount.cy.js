@@ -19,9 +19,22 @@ describe('Bank app', () => {
     cy.get('#userSelect').should('contain', 'Hermoine Granger');
     cy.contains('.btn', 'Login').click();
 
-    // Переконатися, що можна вибирати акаунт і вибрати той, який ти хотів
     cy.contains('Deposit').should('be.visible');
     cy.get('#accountSelect').should('exist');
+    cy.get('#accountSelect')
+      .find(':selected')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.match(/^\d+$/);
+      });
+    cy.contains('[ng-hide="noAccount"]', 'Balance')
+      .parent()
+      .find('strong')
+      .invoke('text')
+      .then((t) => {
+        const initial = Number(t) || 0;
+        expect(initial).to.be.a('number');
+      });
 
     cy.get('#accountSelect')
       .find('option')
@@ -42,6 +55,8 @@ describe('Bank app', () => {
         cy.get('[ng-model="amount"]').clear();
         cy.get('[ng-model="amount"]').type(depositAmount.toString());
         cy.contains('[type="submit"]', 'Deposit').click();
+        cy.get('[ng-show="message"]')
+          .should('contain', 'Deposit Successful');
 
         cy.contains('[ng-hide="noAccount"]', 'Balance')
           .parent()
@@ -53,6 +68,8 @@ describe('Bank app', () => {
         cy.get('[ng-model="amount"]').clear();
         cy.get('[ng-model="amount"]').type(withdrawAmount.toString());
         cy.contains('[type="submit"]', 'Withdraw').click();
+        cy.get('[ng-show="message"]')
+          .should('contain', 'Transaction successful');
 
         cy.contains('[ng-hide="noAccount"]', 'Balance')
           .parent()
