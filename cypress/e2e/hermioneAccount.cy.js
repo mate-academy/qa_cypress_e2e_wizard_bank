@@ -4,9 +4,9 @@ import { faker } from '@faker-js/faker';
 describe('Bank app', () => {
   const depositAmount = `${faker.number.int({ min: 500, max: 1000 })}`;
   const withdrawAmount = `${faker.number.int({ min: 50, max: 500 })}`;
-  // const balance = depositAmount - withdrawAmount;
+  const balance = depositAmount - withdrawAmount;
   const user = 'Hermoine Granger';
-  const accountNumber = '1001';
+  const accountNumber = '1002';
   const transactionType = ['Credit', 'Debit'];
 
   before(() => {
@@ -18,13 +18,12 @@ describe('Bank app', () => {
     cy.get('#userSelect').select(user);
     cy.contains('.btn', 'Login').click();
 
-    cy.contains('[ng-hide="noAccount"]', 'Account Number')
-      .contains('strong', accountNumber)
-      .should('be.visible');
+    cy.get('#accountSelect').select(accountNumber);
+    cy.contains('strong', accountNumber).should('be.visible');
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .get('strong')
+      .contains('strong', '0')
       .should('be.visible');
-    cy.contains('.ng-binding', 'Dollar').should('be.visible');
+    cy.contains('.ng-binding', 'Pound').should('be.visible');
 
     cy.get('[ng-click="deposit()"]').click();
     cy.get('[placeholder="amount"]').type(depositAmount);
@@ -32,7 +31,7 @@ describe('Bank app', () => {
 
     cy.get('[ng-show="message"]').should('contain', 'Deposit Successful');
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .get('strong')
+      .contains('strong', depositAmount)
       .should('be.visible');
 
     cy.get('[ng-click="withdrawl()"]').click();
@@ -42,7 +41,7 @@ describe('Bank app', () => {
 
     cy.get('[ng-show="message"]').should('contain', 'Transaction successful');
     cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .get('strong')
+      .contains('strong', balance)
       .should('be.visible');
 
     cy.get('[ng-class="btnClass1"]').click();
