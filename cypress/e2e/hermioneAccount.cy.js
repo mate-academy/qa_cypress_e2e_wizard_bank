@@ -57,7 +57,7 @@ describe('Bank app', () => {
 
     cy.get('[ng-click="back()"]').click();
 
-    cy.get('#accountSelect').select('1002');
+    cy.get('#accountSelect').select('1003');
 
     cy.get('[ng-click="transactions()"]').click();
 
