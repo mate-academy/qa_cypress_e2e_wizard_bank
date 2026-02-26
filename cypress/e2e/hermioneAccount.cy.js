@@ -46,9 +46,14 @@ describe('Bank app', () => {
 
     cy.get('[ng-class="btnClass1"]').click();
 
-    for (const t of transactionType) {
-      cy.contains('td', t).should('exist');
-    }
+    cy.contains('td', 'Credit')
+      .parent()
+      .contains('td', depositAmount)
+      .should('exist');
+    cy.contains('td', 'Debit')
+      .parent()
+      .contains('td', withdrawAmount)
+      .should('exist');
 
     cy.get('[ng-click="back()"]').click();
 
