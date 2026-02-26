@@ -7,6 +7,7 @@ describe('Bank app', () => {
   // const balance = depositAmount - withdrawAmount;
   const user = 'Hermoine Granger';
   const accountNumber = '1001';
+  const transactionType = ['Credit', 'Debit'];
 
   before(() => {
     cy.visit('/');
@@ -43,5 +44,25 @@ describe('Bank app', () => {
     cy.contains('[ng-hide="noAccount"]', 'Balance')
       .get('strong')
       .should('be.visible');
+
+    cy.get('[ng-class="btnClass1"]').click();
+
+    for (const t of transactionType) {
+      cy.contains('td', t).should('exist');
+    }
+
+    cy.get('[ng-click="back()"]').click();
+
+    cy.get('#accountSelect').select('1002');
+
+    cy.get('[ng-click="transactions()"]').click();
+
+    for (const t of transactionType) {
+      cy.contains('td', t).should('not.exist');
+    }
+
+    cy.get('.logout').click();
+
+    cy.get('#userSelect').should('exist');
   });
 });
