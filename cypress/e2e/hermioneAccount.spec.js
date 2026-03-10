@@ -5,7 +5,7 @@ describe('Wizard Bank - Hermione Granger Account Tests', () => {
   const withdrawAmount = faker.number.int({ min: 10, max: 99 });
   const expectedBalance = depositAmount - withdrawAmount;
 
-  const user = 'Hermoine Granger';
+  const user = 'Hermione Granger';
   const mainAccount = '1001';
   const secondaryAccount = '1002';
 
@@ -22,27 +22,25 @@ describe('Wizard Bank - Hermione Granger Account Tests', () => {
     cy.get('#accountSelect').select(mainAccount);
 
     // Assert account number
-    cy.contains('[ng-hide="noAccount"]', 'Account Number')
-      .find('strong')
-      .last()
-      .should('contain', mainAccount);
+    cy.contains('[ng-hide="noAccount"]', 'Account Number').then(($block) => {
+      cy.wrap($block).find('strong').last().should('contain', mainAccount);
+    });
 
     // Assert initial balance
-    cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .find('strong')
-      .last()
-      .should('contain', '0');
+    cy.contains('[ng-hide="noAccount"]', 'Balance').then(($block) => {
+      cy.wrap($block).find('strong').last().should('contain', '0');
+    });
 
     // Assert currency
-    cy.contains('[ng-hide="noAccount"]', 'Currency')
-      .find('strong')
-      .last()
-      .should('contain', 'Pound');
+    cy.contains('[ng-hide="noAccount"]', 'Currency').then(($block) => {
+      cy.wrap($block).find('strong').last().should('contain', 'Pound');
+    });
 
     // -------------------------
     //        DEPOSIT
     // -------------------------
     cy.get('[ng-click="deposit()"]').click();
+
     cy.get('input[placeholder="amount"]').then(($input) => {
       cy.wrap($input).clear();
       cy.wrap($input).type(depositAmount);
@@ -54,31 +52,29 @@ describe('Wizard Bank - Hermione Granger Account Tests', () => {
       .should('be.visible')
       .and('contain', 'Deposit Successful');
 
-    // Re-check balance (fresh chain)
-    cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .find('strong')
-      .last()
-      .should('contain', depositAmount);
+    cy.contains('[ng-hide="noAccount"]', 'Balance').then(($block) => {
+      cy.wrap($block).find('strong').last().should('contain', depositAmount);
+    });
 
     // -------------------------
     //        WITHDRAW
     // -------------------------
     cy.get('[ng-click="withdrawl()"]').click();
+
     cy.get('input[placeholder="amount"]').then(($input) => {
       cy.wrap($input).clear();
       cy.wrap($input).type(withdrawAmount);
     });
+
     cy.contains('button', 'Withdraw').click();
 
     cy.get('[ng-show="message"]')
       .should('be.visible')
       .and('contain', 'Transaction successful');
 
-    // Re-check balance (fresh chain)
-    cy.contains('[ng-hide="noAccount"]', 'Balance')
-      .find('strong')
-      .last()
-      .should('contain', expectedBalance);
+    cy.contains('[ng-hide="noAccount"]', 'Balance').then(($block) => {
+      cy.wrap($block).find('strong').last().should('contain', expectedBalance);
+    });
 
     // -------------------------
     //     TRANSACTIONS
