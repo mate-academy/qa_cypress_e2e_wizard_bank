@@ -14,7 +14,9 @@ describe('Bank app', () => {
     cy.login(userName);
 
     cy.get('strong.ng-binding').eq(0).should('have.text', '1001');
-    cy.get('strong.ng-binding').eq(1).should('have.text', 'Dollar');
+    cy.get('strong.ng-binding').eq(1).should('have.text', '0');
+    cy.get('strong.ng-binding').eq(2).should('have.text', 'Dollar');
+    cy.get('[ng-click="deposit()"]').click();
     cy.get('input[placeholder="amount"]').type(depositAmount);
     cy.get('form button[type="submit"]').click();
     cy.get('.error')
