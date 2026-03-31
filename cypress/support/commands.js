@@ -23,3 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+/// <reference types='cypress' />
+Cypress.Commands.add('login', (userName) => {
+  cy.contains('button', 'Customer Login').click();
+  cy.get('#userSelect').select(userName);
+  cy.contains('button', 'Login').click();
+});
