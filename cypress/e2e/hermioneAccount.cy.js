@@ -1,8 +1,7 @@
 /// <reference types='cypress' />
 
 describe('Bank app', () => {
-  const expectedUser = 'Hermione Granger';
-  const actualUser = 'Hermoine Granger';
+  const user = 'Hermione Granger';
   const firstAccount = '1001';
   const secondAccount = '1002';
   const depositAmount = 500;
@@ -24,19 +23,7 @@ describe('Bank app', () => {
 
   it('should provide the ability to work with Hermione bank account', () => {
     cy.contains('.btn', 'Customer Login').click();
-
-    cy.get('[name="userSelect"]').should('be.visible');
-
-    cy.get('[name="userSelect"]').then(($select) => {
-      const hasExpectedUser = [...$select[0].options].some(
-        (option) => option.text.trim() === expectedUser
-      );
-
-      cy.wrap($select).select(
-        hasExpectedUser ? expectedUser : actualUser
-      );
-    });
-
+    cy.get('[name="userSelect"]').should('be.visible').select(user);
     cy.contains('.btn', 'Login').click();
 
     cy.get('[ng-hide="noAccount"] strong')
