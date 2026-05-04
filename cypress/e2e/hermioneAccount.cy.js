@@ -9,7 +9,7 @@ describe("Bank app", () => {
 
   const depositInput =
     'form[ng-submit="deposit()"] input[placeholder="amount"]';
-  const depositSumbit = 'form[ng-submit="deposit()"] button[type="submit"]';
+  const depositSubmit = 'form[ng-submit="deposit()"] button[type="submit"]';
 
   const withdrawInput =
     'form[ng-submit="withdrawl()"] input[placeholder="amount"]';
