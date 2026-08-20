@@ -1,10 +1,12 @@
 {
   "scripts": {
     "prepare": "husky install",
-    "lint": "eslint ."
+    "lint": "eslint . --max-warnings=0",
+    "test": "cypress run --browser chrome",
+    "cypress:open": "cypress open --e2e",
+    "cypress:run": "cypress run --browser chrome"
   },
   "dependencies": {
-    "cypress-image-snapshot": "^4.0.1",
     "eslint-plugin-cypress": "^2.12.1",
     "@faker-js/faker": "^8.4.1",
     "pg": "^8.9.0",
@@ -13,7 +15,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@types/cypress": "latest",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "cypress": "^12.13.0",
