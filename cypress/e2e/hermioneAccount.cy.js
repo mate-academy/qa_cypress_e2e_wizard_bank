@@ -5,9 +5,10 @@ const secondAccount = '1002';
 const depositAmount = 500;
 const withdrawAmount = 200;
 const accountDetails = '[ng-hide="noAccount"] strong';
+const hermioneName = /^Herm(?:ione|oine) Granger$/;
 
 const selectHermione = () => {
-  cy.contains('#userSelect option', /^Herm(?:ione|oine) Granger$/)
+  cy.contains('#userSelect option', hermioneName)
     .then(($option) => {
       cy.get('#userSelect').select($option.val());
     });
