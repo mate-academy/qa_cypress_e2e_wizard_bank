@@ -8,11 +8,7 @@ node_modules
 # Cypress generated artifacts
 cypress/videos
 cypress/screenshots
-
 cypress/downloads
-
-# Local debugging frames
-frames/
 
 # Local debugging frames
 frames/

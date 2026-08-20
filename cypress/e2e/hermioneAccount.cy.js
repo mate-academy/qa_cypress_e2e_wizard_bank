@@ -4,6 +4,7 @@ const firstAccount = '1001';
 const secondAccount = '1002';
 const depositAmount = 500;
 const withdrawAmount = 200;
+const expectedInitialBalance = 5096;
 const accountDetails = '[ng-hide="noAccount"] strong';
 const hermioneName = /^Herm(?:ione|oine) Granger$/;
 
@@ -208,6 +209,8 @@ describe('Wizard Bank - Hermione Granger account', () => {
 
     getBalance().then((initialBalance) => {
       expect(Number.isFinite(initialBalance)).to.equal(true);
+      expect(initialBalance, 'initial account balance')
+        .to.equal(expectedInitialBalance);
 
       submitDeposit();
 

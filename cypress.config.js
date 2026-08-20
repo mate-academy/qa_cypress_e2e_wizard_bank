@@ -5,6 +5,9 @@ module.exports = defineConfig({
   pageLoadTimeout: 60000,
   e2e: {
     baseUrl: 'https://www.globalsqa.com/angularJs-protractor/BankingProject/',
-    specPattern: 'cypress/e2e/hermioneAccount.cy.js'
+    specPattern: [
+      'cypress/e2e/hermioneAccount.cy.js',
+      'cypress/e2e/hermioneAdvanced.cy.js'
+    ]
   }
 });
