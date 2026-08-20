@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "checkJs": false,
+    "noEmit": true
+  },
+  "include": [
+    "cypress/**/*.js",
+    "cypress.config.js"
+  ]
+}
