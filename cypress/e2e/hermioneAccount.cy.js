@@ -6,7 +6,7 @@ describe('Bank app', () => {
   const depositAmount = faker.number.int({ min: 100, max: 1000 });
   const withdrawAmount = faker.number.int({ min: 50, max: 500 });
   let balance = 5096;
-  const user = 'Hermoine Granger';
+  const user = 'Hermione Granger';
   const accountNumber = '1001';
 
   before(() => {
