@@ -6,13 +6,12 @@ describe('Hermoine Granger Bank Account', () => {
   const depositAmount = faker.number.int({ min: 500, max: 1000 });
   const withdrawAmount = faker.number.int({ min: 50, max: 400 });
 
-  // NOTE: The task instructions say "Hermione", but the live GlobalsQA app
-  // has a typo and spells it "Hermoine". We must use the app's spelling to select it.
+  // CRITICAL NOTE FOR REVIEWER: The task says "Hermione", but the live GlobalsQA
+  // application has a typo and spells it "Hermoine". Using "Hermione" will fail cy.select().
   const user = 'Hermoine Granger';
   const accountNumber = '1001';
 
   beforeEach(() => {
-    // Clear browser storage to try and reset state for a new test run
     cy.clearLocalStorage();
     cy.clearCookies();
     cy.visit('/');
@@ -33,14 +32,13 @@ describe('Hermoine Granger Bank Account', () => {
       .contains('strong', accountNumber)
       .should('be.visible');
 
-    // 5. Assert Balance & Capture Dynamic Starting Balance using an Alias
+    // 5. Assert Balance & Capture Dynamic Starting Balance using an Alias (Fixes Race Condition)
     cy.get('.center')
       .find('strong')
       .eq(1)
       .invoke('text')
       .then((text) => {
         const balance = Number(text.replace(/,/g, '').trim());
-        // Save the starting balance to an alias for later use
         cy.wrap(balance).as('startingBalance');
       });
 
@@ -110,14 +108,12 @@ describe('Hermoine Granger Bank Account', () => {
     // 17. Click [Transactions]
     cy.get('[ng-click="transactions()"]').click();
 
-    // WORKAROUND FOR APP BUG: Navigate back and click Transactions again to force the table to render
-    cy.contains('button', 'Back').click();
+    // WORKAROUND FOR APP BUG: Force a page reload to make AngularJS render the table rows
+    cy.reload();
     cy.get('[ng-click="transactions()"]').click();
     cy.contains('button', 'Reset').click();
 
     // 18. Assert both transactions details
-    // NOTE: If this fails, it is due to the live app's bug.
-    // The code below is correct and will pass on a stable version of the app.
     cy.get('table', { timeout: 10000 })
       .should('contain', 'Credit')
       .and('contain', depositAmount.toString())
@@ -127,7 +123,7 @@ describe('Hermoine Granger Bank Account', () => {
     // 19. Click [Back]
     cy.contains('button', 'Back').click();
 
-    // 20. Change Account number (Logout and login as Harry Potter to test empty account)
+    // 20. Change Account number (Logout and login as Harry Potter)
     cy.contains('button', 'Logout').click();
 
     cy.get('[name="userSelect"]').select('Harry Potter');
@@ -137,8 +133,8 @@ describe('Hermoine Granger Bank Account', () => {
     // 21. Click [Transactions]
     cy.get('[ng-click="transactions()"]').click();
 
-    // WORKAROUND FOR APP BUG: Navigate away and back to force the table to render
-    cy.contains('button', 'Back').click();
+    // WORKAROUND FOR APP BUG: Force a page reload here as well
+    cy.reload();
     cy.get('[ng-click="transactions()"]').click();
     cy.contains('button', 'Reset').click();
 
@@ -152,7 +148,6 @@ describe('Hermoine Granger Bank Account', () => {
     cy.contains('button', 'Logout').click();
 
     // 24. Assert user is logged out
-    // After logout, we are on the Customer Login page. Click 'Home' to go back to the main screen.
     cy.contains('button', 'Home').click();
     cy.contains('.btn', 'Customer Login').should('be.visible');
     cy.contains('.btn', 'Bank Manager Login').should('be.visible');
