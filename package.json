@@ -1,5 +1,7 @@
 {
   "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "prepare": "husky install",
     "lint": "eslint ."
   },
